@@ -7,6 +7,7 @@ vi.mock('lucide-react', () => ({
   Wind: () => <div data-testid="icon" />,
   AlertTriangle: () => <div data-testid="icon" />,
   Loader2: () => <div data-testid="icon" />,
+  MapPin: () => <div data-testid="icon" />,
 }));
 
 describe('WeatherDashboard Component', () => {

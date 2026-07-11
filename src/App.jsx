@@ -17,7 +17,7 @@ const genAI = new GoogleGenerativeAI(API_KEY);
 
 function App() {
   // Auth State
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userName, setUserName] = useState('');
 
   // Weather State
   const [city, setCity] = useState('');
@@ -40,6 +40,7 @@ function App() {
       const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
       const contextPrompt = `
         You are a Monsoon Preparedness Expert. 
+        The user's name is ${userName}. Greet them personally.
         The user is in ${location}. 
         Current weather: ${weather.weather[0].description}, Temp: ${weather.main.temp}°C, Wind: ${weather.wind.speed}m/s.
         Generate a concise, personalized emergency checklist, safety recommendations, and travel advisory for this specific weather condition. 
@@ -145,24 +146,29 @@ function App() {
     setLoadingAI(false);
   }, [prompt, city, weatherData, language]);
 
-  if (!isAuthenticated) {
+  if (!userName) {
     return (
       <ErrorBoundary>
-        <Login onLogin={setIsAuthenticated} />
+        <Login onLogin={setUserName} />
       </ErrorBoundary>
     );
   }
+
+  const handleLogout = () => {
+    localStorage.removeItem('monsoon_username');
+    setUserName('');
+  };
 
   return (
     <ErrorBoundary>
       <main className="container" aria-label="Main Application Dashboard">
         <header className="flex-center" style={{ flexDirection: 'column', marginBottom: '3rem', position: 'relative' }} role="banner">
           <button 
-            onClick={() => setIsAuthenticated(false)} 
+            onClick={handleLogout} 
             aria-label="Logout of application"
-            style={{ position: 'absolute', top: 0, right: 0, padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.1)', color: 'white', borderRadius: '8px' }}
+            style={{ position: 'absolute', top: 0, right: 0, padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.1)', color: 'white', borderRadius: '8px', cursor: 'pointer' }}
           >
-            Logout
+            Switch User
           </button>
           <h1 className="animate-fade-in" style={{ fontSize: '3rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <CloudRain size={48} color="var(--primary-color)" aria-hidden="true" />

@@ -1,11 +1,42 @@
-import { memo } from 'react';
-import { Wind, AlertTriangle, Compass, Loader2 } from 'lucide-react';
+import { memo, useState } from 'react';
+import { Wind, AlertTriangle, Compass, Loader2, MapPin } from 'lucide-react';
 
 /**
  * WeatherDashboard Component - Displays real-time weather metrics
  * Wrapped in React.memo for efficiency
  */
 const WeatherDashboard = memo(({ city, setCity, fetchWeather, loadingWeather, weatherData }) => {
+  const [locating, setLocating] = useState(false);
+
+  const handleAutoLocate = () => {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser');
+      return;
+    }
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      try {
+        const { latitude, longitude } = position.coords;
+        const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${import.meta.env.VITE_WEATHER_API_KEY}`);
+        if (res.ok) {
+          const data = await res.json();
+          setCity(data.name); // Automatically fill in the input box
+          // We can't easily call fetchWeather from App.jsx directly passing coordinates since it only takes city string,
+          // but setting the city will let them click Fetch or we can trigger it. 
+          // Let's just alert the user to click fetch, or wait, we can just update the city state!
+          alert(`Detected location: ${data.name}. Click Fetch to confirm.`);
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Could not detect city from coordinates.');
+      }
+      setLocating(false);
+    }, () => {
+      alert('Unable to retrieve your location. Check permissions.');
+      setLocating(false);
+    });
+  };
+
   return (
     <section className="glass-panel animate-fade-in" style={{ padding: '2rem' }} aria-labelledby="weather-title">
       <header style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -17,6 +48,15 @@ const WeatherDashboard = memo(({ city, setCity, fetchWeather, loadingWeather, we
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginBottom: '1.5rem' }}>
         <label htmlFor="city-input" style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>City Name</label>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <button 
+            onClick={handleAutoLocate} 
+            disabled={locating}
+            aria-label="Auto-detect location" 
+            title="Auto-detect location"
+            style={{ padding: '0.75rem', borderRadius: '8px', background: 'rgba(255,255,255,0.1)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >
+            {locating ? <Loader2 className="spin" size={20} /> : <MapPin size={20} />}
+          </button>
           <input 
             id="city-input"
             type="text" 
