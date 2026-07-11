@@ -47,13 +47,13 @@ const WeatherDashboard = memo(({ city, setCity, fetchWeather, loadingWeather, we
       
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginBottom: '1.5rem' }}>
         <label htmlFor="city-input" style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>City Name</label>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'stretch', width: '100%' }}>
           <button 
             onClick={handleAutoLocate} 
             disabled={locating}
             aria-label="Auto-detect location" 
             title="Auto-detect location"
-            style={{ padding: '0.75rem', borderRadius: '8px', background: 'rgba(255,255,255,0.1)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            style={{ flexShrink: 0, padding: '0 1rem', borderRadius: '8px', background: 'rgba(255,255,255,0.1)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
             {locating ? <Loader2 className="spin" size={20} /> : <MapPin size={20} />}
           </button>
@@ -65,9 +65,9 @@ const WeatherDashboard = memo(({ city, setCity, fetchWeather, loadingWeather, we
             onChange={(e) => setCity(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && fetchWeather()}
             aria-required="true"
-            style={{ flex: 1, padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'rgba(0,0,0,0.2)', color: 'white' }}
+            style={{ flex: 1, padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'rgba(0,0,0,0.2)', color: 'white', minWidth: '0' }}
           />
-          <button onClick={fetchWeather} aria-label="Fetch Weather" style={{ padding: '0.75rem 1.5rem', borderRadius: '8px', background: 'var(--primary-color)', color: 'white', fontWeight: 'bold' }}>
+          <button onClick={fetchWeather} aria-label="Fetch Weather" style={{ flexShrink: 0, padding: '0 1.5rem', borderRadius: '8px', background: 'var(--primary-color)', color: 'white', fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
             {loadingWeather ? <Loader2 className="spin" size={20} aria-hidden="true" /> : 'Fetch'}
           </button>
         </div>
