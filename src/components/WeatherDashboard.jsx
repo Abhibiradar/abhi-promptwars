@@ -14,19 +14,23 @@ const WeatherDashboard = memo(({ city, setCity, fetchWeather, loadingWeather, we
         </h2>
       </header>
       
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
-        <input 
-          type="text" 
-          placeholder="Enter city name..." 
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && fetchWeather()}
-          aria-label="City search input"
-          style={{ flex: 1, padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'rgba(0,0,0,0.2)', color: 'white' }}
-        />
-        <button onClick={fetchWeather} aria-label="Fetch Weather" style={{ padding: '0.75rem 1.5rem', borderRadius: '8px', background: 'var(--primary-color)', color: 'white', fontWeight: 'bold' }}>
-          {loadingWeather ? <Loader2 className="spin" size={20} aria-hidden="true" /> : 'Fetch'}
-        </button>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', marginBottom: '1.5rem' }}>
+        <label htmlFor="city-input" style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>City Name</label>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <input 
+            id="city-input"
+            type="text" 
+            placeholder="Enter city name..." 
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && fetchWeather()}
+            aria-required="true"
+            style={{ flex: 1, padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'rgba(0,0,0,0.2)', color: 'white' }}
+          />
+          <button onClick={fetchWeather} aria-label="Fetch Weather" style={{ padding: '0.75rem 1.5rem', borderRadius: '8px', background: 'var(--primary-color)', color: 'white', fontWeight: 'bold' }}>
+            {loadingWeather ? <Loader2 className="spin" size={20} aria-hidden="true" /> : 'Fetch'}
+          </button>
+        </div>
       </div>
 
       {weatherData && (
