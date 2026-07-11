@@ -120,6 +120,7 @@ function App() {
       const result = await model.generateContent(`
         Context: ${context}
         User Language: ${language}
+        The user's name is ${userName}. You should address them by their name (e.g. "Hello ${userName}").
         You are a helpful monsoon preparedness assistant. Answer the user's question directly and concisely in Markdown.
         User: ${userMessage}
       `);
@@ -163,13 +164,16 @@ function App() {
     <ErrorBoundary>
       <main className="container" aria-label="Main Application Dashboard">
         <header className="flex-center" style={{ flexDirection: 'column', marginBottom: '3rem', position: 'relative' }} role="banner">
-          <button 
-            onClick={handleLogout} 
-            aria-label="Logout of application"
-            style={{ position: 'absolute', top: 0, right: 0, padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.1)', color: 'white', borderRadius: '8px', cursor: 'pointer' }}
-          >
-            Switch User
-          </button>
+          <div style={{ position: 'absolute', top: 0, right: 0, display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <span style={{ color: 'var(--text-muted)' }}>Hello, <strong>{userName}</strong></span>
+            <button 
+              onClick={handleLogout} 
+              aria-label="Logout of application"
+              style={{ padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.1)', color: 'white', borderRadius: '8px', cursor: 'pointer' }}
+            >
+              Switch User
+            </button>
+          </div>
           <h1 className="animate-fade-in" style={{ fontSize: '3rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <CloudRain size={48} color="var(--primary-color)" aria-hidden="true" />
             MonsoonShield AI
